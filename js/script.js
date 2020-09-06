@@ -10,7 +10,8 @@ const user1 = {
     height: canvas.height/3,
     x:5,
     y: canvas.height/3,
-    color: 'white'
+    color: 'white',
+    score: 0
 }
 
 const user2 = {
@@ -18,7 +19,8 @@ const user2 = {
     height: canvas.height/3,
     x:canvas.width - 10,
     y: canvas.height/3,
-    color: 'white'
+    color: 'white',
+    score: 0
 }
 
 // render function draws everything on to canvas
@@ -36,8 +38,14 @@ function render() {
     ctx.fillRect(user2.x, user2.y, user2.width, user2.height)
 
     // draw score on left
-
+    ctx.textBaseline = 'bottom';
+    ctx.font = "30px serif"
+    ctx.fillText(user1.score.toString(), canvas.width/4, canvas.height/8)
+    
     // draw score on right
+    ctx.textBaseline = 'botton';
+    ctx.font = "30px serif"
+    ctx.fillText(user2.score.toString(), 3 * canvas.width/4, canvas.height/8)
 
     // draw net
 
