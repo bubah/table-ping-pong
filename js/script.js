@@ -23,6 +23,15 @@ const user2 = {
     score: 0
 }
 
+const net = {
+    startX: canvas.width/2,
+    StartY: 0,
+    endX: canvas.width/2,
+    endY: canvas.height,
+    lineWidth: 5,
+    color: 'white'
+}
+
 // render function draws everything on to canvas
 function render() {
 
@@ -48,6 +57,12 @@ function render() {
     ctx.fillText(user2.score.toString(), 3 * canvas.width/4, canvas.height/8)
 
     // draw net
+    ctx.beginPath()
+    ctx.lineWidth = net.lineWidth.toString()
+    ctx.strokeStyle = "white"
+    ctx.moveTo(net.startX, net.StartY)
+    ctx.lineTo(net.endX, net.endY)
+    ctx.stroke()
 
     // draw ball
 
