@@ -7,17 +7,21 @@ const ctx = canvas.getContext('2d');
 
 // render function draws everything on to canvas
 function render() {
-  // draw paddle 1
+
+    // draw board
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+    // draw paddle 1
   
-  // draw paddle 2
+    // draw paddle 2
 
-  // draw score on left
+    // draw score on left
 
-  // draw score on right
+    // draw score on right
 
-  // draw net
+    // draw net
 
-  // draw ball
+    // draw ball
 
 }
     
