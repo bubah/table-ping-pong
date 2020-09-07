@@ -5,13 +5,54 @@ const canvas = document.getElementById('canvas');
 /* get a "context". Without "context", we can't draw on canvas */
 const ctx = canvas.getContext('2d');
 
+window.addEventListener('keydown', keyDownHandler)
+window.addEventListener('keyup', keyUpHandler)
+
+function keyDownHandler(event) {
+    switch(event.keyCode) {
+        case 65:
+            user1.pressUpArrow = true
+            break
+        case 38:
+            user2.pressUpArrow = true
+            break
+        case 90:
+            user1.pressDownArrow = true
+        case 40:
+            user2.pressDownArrow = true
+        default:
+            break
+    }
+}
+
+function keyUpHandler(event) {
+    switch(event.keyCode) {
+        case 65:
+            user1.pressUpArrow = false
+            break
+        case 38:
+            user2.pressUpArrow = false
+            break
+        case 90:
+            user1.pressDownArrow = false
+            break
+        case 40:
+            user2.pressDownArrow = false
+        default:
+            break
+    }
+}
+
+
 const user1 = {
     width: 5,
     height: canvas.height/3,
     x:5,
     y: canvas.height/3,
     color: 'white',
-    score: 0
+    score: 0,
+    pressUpArrow: false,
+    pressDownArrow: false,
 }
 
 const user2 = {
@@ -20,7 +61,9 @@ const user2 = {
     x:canvas.width - 10,
     y: canvas.height/3,
     color: 'white',
-    score: 0
+    score: 0,
+    pressUpArrow: false,
+    pressDownArrow: false,
 }
 
 const net = {
@@ -43,6 +86,7 @@ const ball = {
 
 const drawBoard = () => {
     // draw board
+    ctx.fillStyle = 'black'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 }
 
@@ -76,6 +120,32 @@ const drawBall = (x, y, radius, beginArc, endArc, counterClockWise, color) => {
     ctx.stroke()
 }
 
+function gameLoop() {
+// Update --------------------------aaaaaaaaaaaaaazzzzzzzzzzzzzzzz
+
+    // User1 paddle
+    if(user1.pressUpArrow) {
+        user1.y += -5
+    } else if(user1.pressDownArrow) {
+        user1.y += 5
+    }
+    
+    // User2 paddle
+    if(user2.pressUpArrow) {
+        user2.y += -5
+    } else if(user2.pressDownArrow) {
+        user2.y += 5
+    }
+    
+// Update --------------------------
+    
+
+    // render
+    render()
+
+    // reset
+}
+
 // render function draws everything on to canvas
 function render() {
     
@@ -97,5 +167,5 @@ function render() {
     
     drawBall(ball.x, ball.y, ball.radius, 0, 2 * Math.PI, true, ball.color)
 }
-    
-render();
+
+setInterval(gameLoop, 1000/60)
