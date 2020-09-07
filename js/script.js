@@ -25,7 +25,7 @@ const user2 = {
 
 const net = {
     startX: canvas.width/2,
-    StartY: 0,
+    startY: 0,
     endX: canvas.width/2,
     endY: canvas.height,
     lineWidth: 5,
@@ -41,46 +41,61 @@ const ball = {
     velocityY: 5,
 }
 
-// render function draws everything on to canvas
-function render() {
-
+const drawBoard = () => {
     // draw board
     ctx.fillRect(0, 0, canvas.width, canvas.height)
+}
 
-    // draw paddle 1
-    ctx.fillStyle = user1.color
-    ctx.fillRect(user1.x, user1.y, user1.width, user1.height)
-    
-    // draw paddle 2
-    ctx.fillStyle = user2.color
-    ctx.fillRect(user2.x, user2.y, user2.width, user2.height)
+const drawPaddle = (x, y, width, height, color) => {
+    // draw paddle
+    ctx.fillStyle = color
+    ctx.fillRect(x, y, width, height)
+}
 
-    // draw score on left
-    ctx.textBaseline = 'bottom';
-    ctx.font = "30px serif"
-    ctx.fillText(user1.score.toString(), canvas.width/4, canvas.height/8)
-    
-    // draw score on right
-    ctx.textBaseline = 'botton';
-    ctx.font = "30px serif"
-    ctx.fillText(user2.score.toString(), 3 * canvas.width/4, canvas.height/8)
+const drawScore = (score, font, x, y) => {
+    ctx.textBaseline = 'bottom'
+    ctx.font = `${font}px serif`
+    ctx.fillText(score.toString(), x, y)
+}
 
-    // draw net
+const drawNet = (startX, startY, endX, endY, strokeStyle, lineWidth) =>  {
     ctx.beginPath()
-    ctx.lineWidth = net.lineWidth.toString()
-    ctx.strokeStyle = "white"
-    ctx.moveTo(net.startX, net.StartY)
-    ctx.lineTo(net.endX, net.endY)
+    ctx.lineWidth = lineWidth.toString()
+    ctx.strokeStyle = strokeStyle
+    ctx.moveTo(startX, startY)
+    ctx.lineTo(endX, endY)
     ctx.stroke()
-    
-    // draw ball
+}
+
+const drawBall = (x, y, radius, beginArc, endArc, counterClockWise, color) => {
     ctx.beginPath()
-    ctx.strokeStyle = ball.color
-    ctx.fillStyle = ball.color
-    ctx.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI, true)
+    ctx.strokeStyle = color
+    ctx.fillStyle = color
+    ctx.arc(x, y, radius, beginArc, endArc, counterClockWise)
     ctx.fill()
     ctx.stroke()
+}
 
+// render function draws everything on to canvas
+function render() {
+    
+    drawBoard()
+    
+    // draw user1 paddle
+    drawPaddle(user1.x, user1.y, user1.width, user1.height, user1.color)
+    
+    // draw user2 paddle
+    drawPaddle(user2.x, user2.y, user2.width, user2.height, user2.color)
+    
+    // draw score on left
+    drawScore(user1.score, 30, canvas.width/4, canvas.height/8)
+    
+    // draw score on right
+    drawScore(user2.score, 30, 3 * canvas.width/4, canvas.height/8)
+
+    drawNet(net.startX, net.startY, net.endX, net.endY, net.color, net.lineWidth)
+    
+    drawBall(ball.x, ball.y, ball.radius, 0, 2 * Math.PI, true, ball.color)
 }
     
 render();
