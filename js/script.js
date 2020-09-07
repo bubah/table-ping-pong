@@ -32,6 +32,15 @@ const net = {
     color: 'white'
 }
 
+const ball = {
+    x: canvas.width/2,
+    y: canvas.height/2,
+    radius: 8,
+    color: "green",
+    velocityX: 5,
+    velocityY: 5,
+}
+
 // render function draws everything on to canvas
 function render() {
 
@@ -63,8 +72,14 @@ function render() {
     ctx.moveTo(net.startX, net.StartY)
     ctx.lineTo(net.endX, net.endY)
     ctx.stroke()
-
+    
     // draw ball
+    ctx.beginPath()
+    ctx.strokeStyle = ball.color
+    ctx.fillStyle = ball.color
+    ctx.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI, true)
+    ctx.fill()
+    ctx.stroke()
 
 }
     
