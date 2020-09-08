@@ -22,6 +22,19 @@ function keyDownHandler(event) {
         case 40:
             user2.pressDownArrow = true
             break
+        case 32:
+            if(user1.winner || user2.winner) {
+                user1.winner = false
+                user2.winner = false 
+                user1.score = 0
+                user2.score = 0   
+            }
+
+            if(ball.velocityX == 0 & ball.velocityY == 0) {
+                ball.velocityX = 5
+                ball.velocityY = 5
+            }
+            break
         default:
             break
     }
@@ -56,6 +69,7 @@ const user1 = {
     score: 0,
     pressUpArrow: false,
     pressDownArrow: false,
+    winner: false
 }
 
 const user2 = {
@@ -67,6 +81,7 @@ const user2 = {
     score: 0,
     pressUpArrow: false,
     pressDownArrow: false,
+    winner: false
 }
 
 const net = {
@@ -83,8 +98,8 @@ const ball = {
     y: canvas.height/2,
     radius: 8,
     color: "green",
-    velocityX: 5,
-    velocityY: 5,
+    velocityX: 0,
+    velocityY: 0,
 }
 
 const drawBoard = () => {
@@ -123,9 +138,23 @@ const drawBall = (x, y, radius, beginArc, endArc, counterClockWise, color) => {
     ctx.stroke()
 }
 
-function gameLoop() {
-// Update --------------------------aaaaaaaaaaaaaazzzzzzzzzzzzzzzz
+function reset() {
+    ball.x = canvas.width/2
+    ball.y = canvas.height/2
+    ball.velocityX = 0
+    ball.velocityY = 0
+}
 
+function player2Win() {
+    return user2.score >= 2
+}
+function player1Win() {
+    return user1.score >= 2
+}
+function gameLoop() {
+
+    // Start Game
+    // Update --------------------------aaaaaaaaaaaaaazzzzzzzzzzzzzzz
     // User1 paddle
     if(user1.pressUpArrow) {
         if(user1.y > 0) {
@@ -148,14 +177,7 @@ function gameLoop() {
         }
     }
 
-    // Ball
-    if(ball.x < canvas.width - ball.radius & ball.x > 0) {
-        ball.x += ball.velocityX
-    } else {
-        ball.velocityX = -ball.velocityX
-        ball.x += ball.velocityX
-    }
-
+    // Paddle collision
     if (ball.y >= user1.y & ball.y <= (user1.y + user1.height) & ball.x <= (0 + user1.x + user1.width + ball.radius)) {
         ball.velocityX = -ball.velocityX
         ball.x += ball.velocityX
@@ -166,9 +188,26 @@ function gameLoop() {
 
     if(ball.y > ball.radius & ball.y < canvas.height - ball.radius) {
         ball.y += ball.velocityY
+        ball.x += ball.velocityX
     } else {
         ball.velocityY = -ball.velocityY
         ball.y += ball.velocityY
+    }
+
+    if(ball.x < 0) {
+        user2.score++
+        if(player2Win()) {
+            user2.winner = true
+        }
+        reset()
+    }
+
+    if(ball.x > canvas.width) {
+        user1.score++
+        if(player1Win()) {
+            user1.winner = true
+        } 
+        reset()
     }
     
 // Update --------------------------
@@ -178,6 +217,20 @@ function gameLoop() {
     render()
 
     // reset
+}
+
+function drawWinner() {
+    if(user1.winner) {
+        ctx.fillStyle = 'white'
+        ctx.textBaseline = 'alphabetic'
+        ctx.font = "normal 20px serif"
+        ctx.fillText("Player 1 Wins!", canvas.width/8, canvas.height/2)
+    } else if (user2.winner) {
+        ctx.fillStyle = 'white'
+        ctx.textBaseline = 'alphabetic'
+        ctx.font = "normal 20px serif"
+        ctx.fillText("Player 2 Wins!", 5 * canvas.width/8, canvas.height/2)
+    }
 }
 
 // render function draws everything on to canvas
@@ -200,6 +253,8 @@ function render() {
     drawNet(net.startX, net.startY, net.endX, net.endY, net.color, net.lineWidth)
     
     drawBall(ball.x, ball.y, ball.radius, 0, 2 * Math.PI, true, ball.color)
+
+    drawWinner()
 }
 
 setInterval(gameLoop, 1000/60)
