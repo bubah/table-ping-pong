@@ -128,16 +128,24 @@ function gameLoop() {
 
     // User1 paddle
     if(user1.pressUpArrow) {
-        user1.y += -5
+        if(user1.y > 0) {
+            user1.y += -5
+        }
     } else if(user1.pressDownArrow) {
-        user1.y += 5
+        if(user1.y < canvas.height - user2.height) {
+            user1.y += 5
+        }
     }
     
     // User2 paddle
     if(user2.pressUpArrow) {
-        user2.y += -5
+        if(user2.y > 0) {
+            user2.y += -5
+        }
     } else if(user2.pressDownArrow) {
-        user2.y += 5
+        if(user2.y < canvas.height - user2.height) {
+            user2.y += 5
+        }
     }
     
 // Update --------------------------
