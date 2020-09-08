@@ -149,25 +149,26 @@ function gameLoop() {
     }
 
     // Ball
-    if(ball.x < canvas.width - ball.radius) {
+    if(ball.x < canvas.width - ball.radius & ball.x > 0) {
+        ball.x += ball.velocityX
+    } else {
+        ball.velocityX = -ball.velocityX
         ball.x += ball.velocityX
     }
-    if(ball.x >= canvas.width - ball.radius) {
+
+    if (ball.y >= user1.y & ball.y <= (user1.y + user1.height) & ball.x <= (0 + user1.x + user1.width + ball.radius)) {
         ball.velocityX = -ball.velocityX
-        ball.x -= 5
-    } else if(ball.x <= 0 + ball.radius) {
+        ball.x += ball.velocityX
+    } else if(ball.y >= user2.y & ball.y <= (user2.y + user2.height) &  ball.x >= (canvas.width - (user2.width + 5) - ball.radius)) {
         ball.velocityX = -ball.velocityX
-        ball.x += 5
+        ball.x += ball.velocityX
     }
-    if(ball.y < canvas.height - ball.radius) {
+
+    if(ball.y > ball.radius & ball.y < canvas.height - ball.radius) {
         ball.y += ball.velocityY
-    }
-    if(ball.y >= canvas.height - ball.radius) {
+    } else {
         ball.velocityY = -ball.velocityY
-        ball.y -= 5
-    } else if(ball.y <= 0 + ball.radius) {
-        ball.velocityY = -ball.velocityY
-        ball.Y += 5
+        ball.y += ball.velocityY
     }
     
 // Update --------------------------
