@@ -18,8 +18,10 @@ function keyDownHandler(event) {
             break
         case 90:
             user1.pressDownArrow = true
+            break
         case 40:
             user2.pressDownArrow = true
+            break
         default:
             break
     }
@@ -38,6 +40,7 @@ function keyUpHandler(event) {
             break
         case 40:
             user2.pressDownArrow = false
+            break
         default:
             break
     }
