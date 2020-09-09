@@ -8,6 +8,11 @@ const ctx = canvas.getContext('2d');
 window.addEventListener('keydown', keyDownHandler)
 window.addEventListener('keyup', keyUpHandler)
 
+const paddleHitSound = new Audio('../sounds/boing_spring.wav')
+const wallHitSound = new Audio('../sounds/wallHitSound.wav')
+const scoreSound = new Audio('../sounds/scoreSound.wav')
+const winnerSound = new Audio('../sounds/cheering.wav')
+
 function keyDownHandler(event) {
     switch(event.keyCode) {
         case 65:
@@ -103,13 +108,11 @@ const ball = {
 }
 
 const drawBoard = () => {
-    // draw board
     ctx.fillStyle = 'black'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 }
 
 const drawPaddle = (x, y, width, height, color) => {
-    // draw paddle
     ctx.fillStyle = color
     ctx.fillRect(x, y, width, height)
 }
@@ -181,32 +184,40 @@ function gameLoop() {
     if (ball.y >= user1.y & ball.y <= (user1.y + user1.height) & ball.x <= (0 + user1.x + user1.width + ball.radius)) {
         ball.velocityX = -ball.velocityX
         ball.x += ball.velocityX
+        paddleHitSound.play()
     } else if(ball.y >= user2.y & ball.y <= (user2.y + user2.height) &  ball.x >= (canvas.width - (user2.width + 5) - ball.radius)) {
         ball.velocityX = -ball.velocityX
         ball.x += ball.velocityX
+        paddleHitSound.play()
     }
 
+    // Wall collision
     if(ball.y > ball.radius & ball.y < canvas.height - ball.radius) {
         ball.y += ball.velocityY
         ball.x += ball.velocityX
     } else {
         ball.velocityY = -ball.velocityY
         ball.y += ball.velocityY
+        wallHitSound.play()
     }
 
     if(ball.x < 0) {
         user2.score++
         if(player2Win()) {
             user2.winner = true
+            winnerSound.play()
         }
+        scoreSound.play()
         reset()
     }
-
+    
     if(ball.x > canvas.width) {
         user1.score++
         if(player1Win()) {
             user1.winner = true
+            winnerSound.play()
         } 
+        scoreSound.play()
         reset()
     }
     
