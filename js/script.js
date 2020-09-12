@@ -13,6 +13,9 @@ const wallHitSound = new Audio('../sounds/wallHitSound.wav')
 const scoreSound = new Audio('../sounds/scoreSound.wav')
 const winnerSound = new Audio('../sounds/cheering.wav')
 
+const clearance = 5
+const paddleWidth = 10
+
 function keyDownHandler(event) {
     switch(event.keyCode) {
         case 65:
@@ -66,21 +69,21 @@ function keyUpHandler(event) {
 
 
 const user1 = {
-    width: 5,
+    width: paddleWidth,
     height: canvas.height/3,
-    x:5,
+    x:clearance,
     y: canvas.height/3,
     color: 'white',
     score: 0,
     pressUpArrow: false,
     pressDownArrow: false,
-    winner: false
+    winner: false,
 }
 
 const user2 = {
-    width: 5,
+    width: paddleWidth,
     height: canvas.height/3,
-    x:canvas.width - 10,
+    x:canvas.width - clearance - paddleWidth,
     y: canvas.height/3,
     color: 'white',
     score: 0,
@@ -107,7 +110,7 @@ const ball = {
     velocityY: 0,
 }
 
-const drawBoard = () => {
+const drawBoard = (canvas) => {
     ctx.fillStyle = 'black'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 }
@@ -160,16 +163,16 @@ function gameLoop() {
 
     // User1 paddle
     if(user1.pressUpArrow && !userPaddleTouchTopWall(user1)) {
-        moveUser1PaddleUP();
+        moveUser1PaddleUP(user1);
     } else if(user1.pressDownArrow && !userPaddleTouchBottomWall(user1)) {
-        moveUser1PaddleDown();
+        moveUser1PaddleDown(user1);
     }
     
     // User2 paddle
     if(user2.pressUpArrow && !userPaddleTouchTopWall(user2)) {
-        moveUser2PaddleUp();
+        moveUser2PaddleUp(user2);
     } else if(user2.pressDownArrow & !userPaddleTouchBottomWall(user2)) {
-        moveUser2PaddleDown();
+        moveUser2PaddleDown(user2);
     }
 
     // Paddle collision
@@ -245,23 +248,23 @@ function ballCollideWithLeftPaddle() {
     return ball.y >= user1.y & ball.y <= (user1.y + user1.height) & ball.x <= (0 + user1.x + user1.width + ball.radius);
 }
 
-function moveUser2PaddleDown() {
-    user2.y += 5;
+function moveUser2PaddleDown(user) {
+    user.y += 5;
 }
 
-function moveUser2PaddleUp() {
-    user2.y += -5;
+function moveUser2PaddleUp(user) {
+    user.y += -5;
 }
 
-function moveUser1PaddleDown() {
-    user1.y += 5;
+function moveUser1PaddleDown(user) {
+    user.y += 5;
 }
 
-function moveUser1PaddleUP() {
-    user1.y += -5;
+function moveUser1PaddleUP(user) {
+    user.y += -5;
 }
 
-function drawWinner() {
+function drawWinner(user1, user2) {
     if(user1.winner) {
         ctx.fillStyle = 'white'
         ctx.textBaseline = 'alphabetic'
@@ -278,9 +281,9 @@ function drawWinner() {
 // render function draws everything on to canvas
 function render() {
     
-    //drawBoard()
+    //drawBoard(canvas)
     
-    drawTableImage()
+    drawTableImage(canvas)
     // draw user1 paddle
     drawPaddle(user1.x, user1.y, user1.width, user1.height, user1.color)
     
@@ -297,14 +300,14 @@ function render() {
     
     drawBall(ball.x, ball.y, ball.radius, 0, 2 * Math.PI, true, ball.color)
 
-    drawWinner()
+    drawWinner(user1, user2)
 
 }
 
 // Draw an image
-function drawTableImage() {
+function drawTableImage(canvas) {
     const tableImage = new Image();
-    tableImage.src = "../images/table_pong.jpg";
+    tableImage.src = "../images/fortnite3.jpg";
     ctx.drawImage(tableImage, 0, 0 , canvas.width, canvas.height)
 }
 

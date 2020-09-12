@@ -12,7 +12,7 @@ body {
 
 #canvas-wrapper {
     width: 800px;
-    height: 500px;
+    height: 410px;
     margin: auto;
     display: flex;
     justify-content: center;
@@ -20,7 +20,7 @@ body {
 }
 
 #title {
-    display: inline;
-    top: 0;
-    text-align: center
+    display: block;
+    text-align: center;
+    margin: 30px;
 }
