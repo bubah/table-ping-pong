@@ -102,7 +102,7 @@ const ball = {
     x: canvas.width/2,
     y: canvas.height/2,
     radius: 8,
-    color: "green",
+    color: "white",
     velocityX: 0,
     velocityY: 0,
 }
@@ -151,57 +151,43 @@ function reset() {
 function player2Win() {
     return user2.score >= 2
 }
+
 function player1Win() {
     return user1.score >= 2
 }
+
 function gameLoop() {
 
-    // Start Game
-    // Update --------------------------aaaaaaaaaaaaaazzzzzzzzzzzzzzz
     // User1 paddle
-    if(user1.pressUpArrow) {
-        if(user1.y > 0) {
-            user1.y += -5
-        }
-    } else if(user1.pressDownArrow) {
-        if(user1.y < canvas.height - user2.height) {
-            user1.y += 5
-        }
+    if(user1.pressUpArrow && !userPaddleTouchTopWall(user1)) {
+        moveUser1PaddleUP();
+    } else if(user1.pressDownArrow && !userPaddleTouchBottomWall(user1)) {
+        moveUser1PaddleDown();
     }
     
     // User2 paddle
-    if(user2.pressUpArrow) {
-        if(user2.y > 0) {
-            user2.y += -5
-        }
-    } else if(user2.pressDownArrow) {
-        if(user2.y < canvas.height - user2.height) {
-            user2.y += 5
-        }
+    if(user2.pressUpArrow && !userPaddleTouchTopWall(user2)) {
+        moveUser2PaddleUp();
+    } else if(user2.pressDownArrow & !userPaddleTouchBottomWall(user2)) {
+        moveUser2PaddleDown();
     }
 
     // Paddle collision
-    if (ball.y >= user1.y & ball.y <= (user1.y + user1.height) & ball.x <= (0 + user1.x + user1.width + ball.radius)) {
-        ball.velocityX = -ball.velocityX
-        ball.x += ball.velocityX
-        paddleHitSound.play()
-    } else if(ball.y >= user2.y & ball.y <= (user2.y + user2.height) &  ball.x >= (canvas.width - (user2.width + 5) - ball.radius)) {
-        ball.velocityX = -ball.velocityX
-        ball.x += ball.velocityX
-        paddleHitSound.play()
+    if (ballCollideWithLeftPaddle()) {
+        reverseBallHorizontalDirection();
+    } else if(ballCollideWithRightPaddle()) {
+        reverseBallHorizontalDirection()
     }
 
     // Wall collision
-    if(ball.y > ball.radius & ball.y < canvas.height - ball.radius) {
+    if(!ballCollideWithTopWall()) {
         ball.y += ball.velocityY
         ball.x += ball.velocityX
     } else {
-        ball.velocityY = -ball.velocityY
-        ball.y += ball.velocityY
-        wallHitSound.play()
+        reverseBallVerticalDirection();
     }
 
-    if(ball.x < 0) {
+    if(ball.x < 0) { 
         user2.score++
         if(player2Win()) {
             user2.winner = true
@@ -220,14 +206,59 @@ function gameLoop() {
         scoreSound.play()
         reset()
     }
-    
-// Update --------------------------
+
     
 
     // render
     render()
+}
 
-    // reset
+function userPaddleTouchBottomWall(user) {
+    return !(user.y < canvas.height - user.height);
+}
+
+function userPaddleTouchTopWall(user) {
+    return !(user.y > 0);
+}
+
+function reverseBallVerticalDirection() {
+    ball.velocityY = -ball.velocityY;
+    ball.y += ball.velocityY;
+    wallHitSound.play();
+}
+
+function ballCollideWithTopWall() {
+    return !(ball.y > ball.radius & ball.y < canvas.height - ball.radius);
+}
+
+function reverseBallHorizontalDirection() {
+    ball.velocityX = -ball.velocityX;
+    ball.x += ball.velocityX;
+    paddleHitSound.play()
+}
+
+function ballCollideWithRightPaddle() {
+    return ball.y >= user2.y & ball.y <= (user2.y + user2.height) & ball.x >= (canvas.width - (user2.width + 5) - ball.radius);
+}
+
+function ballCollideWithLeftPaddle() {
+    return ball.y >= user1.y & ball.y <= (user1.y + user1.height) & ball.x <= (0 + user1.x + user1.width + ball.radius);
+}
+
+function moveUser2PaddleDown() {
+    user2.y += 5;
+}
+
+function moveUser2PaddleUp() {
+    user2.y += -5;
+}
+
+function moveUser1PaddleDown() {
+    user1.y += 5;
+}
+
+function moveUser1PaddleUP() {
+    user1.y += -5;
 }
 
 function drawWinner() {
@@ -247,8 +278,9 @@ function drawWinner() {
 // render function draws everything on to canvas
 function render() {
     
-    drawBoard()
+    //drawBoard()
     
+    drawTableImage()
     // draw user1 paddle
     drawPaddle(user1.x, user1.y, user1.width, user1.height, user1.color)
     
@@ -266,6 +298,14 @@ function render() {
     drawBall(ball.x, ball.y, ball.radius, 0, 2 * Math.PI, true, ball.color)
 
     drawWinner()
+
+}
+
+// Draw an image
+function drawTableImage() {
+    const tableImage = new Image();
+    tableImage.src = "../images/table_pong.jpg";
+    ctx.drawImage(tableImage, 0, 0 , canvas.width, canvas.height)
 }
 
 setInterval(gameLoop, 1000/60)
