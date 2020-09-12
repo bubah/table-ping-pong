@@ -73,7 +73,7 @@ const user1 = {
     height: canvas.height/3,
     x:clearance,
     y: canvas.height/3,
-    color: 'white',
+    color: bikingRed,
     score: 0,
     pressUpArrow: false,
     pressDownArrow: false,
@@ -85,7 +85,7 @@ const user2 = {
     height: canvas.height/3,
     x:canvas.width - clearance - paddleWidth,
     y: canvas.height/3,
-    color: 'white',
+    color: aspenGold,
     score: 0,
     pressUpArrow: false,
     pressDownArrow: false,
@@ -98,14 +98,14 @@ const net = {
     endX: canvas.width/2,
     endY: canvas.height,
     lineWidth: 5,
-    color: 'white'
+    color: bikingRed
 }
 
 const ball = {
     x: canvas.width/2,
     y: canvas.height/2,
     radius: 8,
-    color: "white",
+    color: bikingRed,
     velocityX: 0,
     velocityY: 0,
 }
@@ -121,6 +121,7 @@ const drawPaddle = (x, y, width, height, color) => {
 }
 
 const drawScore = (score, font, x, y) => {
+    ctx.fillStyle = bikingRed
     ctx.textBaseline = 'bottom'
     ctx.font = `${font}px serif`
     ctx.fillText(score.toString(), x, y)
@@ -291,10 +292,10 @@ function render() {
     drawPaddle(user2.x, user2.y, user2.width, user2.height, user2.color)
     
     // draw score on left
-    drawScore(user1.score, 30, canvas.width/4, canvas.height/8)
+    drawScore(user1.score, 40, canvas.width/4, 7.5 * canvas.height/8)
     
     // draw score on right
-    drawScore(user2.score, 30, 3 * canvas.width/4, canvas.height/8)
+    drawScore(user2.score, 40, 3 * canvas.width/4, 7.5 * canvas.height/8)
 
     drawNet(net.startX, net.startY, net.endX, net.endY, net.color, net.lineWidth)
     
@@ -307,7 +308,7 @@ function render() {
 // Draw an image
 function drawTableImage(canvas) {
     const tableImage = new Image();
-    tableImage.src = "../images/fortnite3.jpg";
+    tableImage.src = "../images/fortnite4.jpg";
     ctx.drawImage(tableImage, 0, 0 , canvas.width, canvas.height)
 }
 
